@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # Позволяет запускать процесс вручную
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Выбираем ОС
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Клонируем репозиторий
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -31,14 +31,3 @@ jobs:
         with:
           name: packaged-app
           path: target/*.jar
-"""
-
-# Сохраняем обновленный CI/CD workflow в файле
-ci_file_path = os.path.join(extract_path, "GitAction/.github/workflows/ci.yml")
-os.makedirs(os.path.dirname(ci_file_path), exist_ok=True)
-
-with open(ci_file_path, "w") as ci_file:
-    ci_file.write(ci_cd_workflow)
-
-# Подтверждаем путь к обновленному файлу
-ci_file_path
