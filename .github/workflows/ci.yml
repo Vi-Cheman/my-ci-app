@@ -1,4 +1,3 @@
-ci_cd_workflow = """\
 name: CI Pipeline
 
 on:
