@@ -1,3 +1,4 @@
+ci_cd_workflow = """\
 name: CI Pipeline
 
 on:
@@ -8,30 +9,37 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Выбираем операционную систему
+    runs-on: ubuntu-latest  # Выбираем ОС
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4  # Клонируем репозиторий
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          node-version: 18  # Устанавливаем версию Node.js
+          distribution: 'temurin'
+          java-version: '17'
 
-      - name: Install dependencies
-        run: npm install  # Установка зависимостей
-
-      - name: Build project
-        run: npm run build  # Запуск сборки проекта
+      - name: Build with Maven
+        run: mvn clean package
 
       - name: Run tests
-        run: npm test  # Запуск тестов
+        run: mvn test
 
-      - name: Push updates
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Automated build & test"
-          git push
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-app
+          path: target/*.jar
+"""
+
+# Сохраняем обновленный CI/CD workflow в файле
+ci_file_path = os.path.join(extract_path, "GitAction/.github/workflows/ci.yml")
+os.makedirs(os.path.dirname(ci_file_path), exist_ok=True)
+
+with open(ci_file_path, "w") as ci_file:
+    ci_file.write(ci_cd_workflow)
+
+# Подтверждаем путь к обновленному файлу
+ci_file_path
