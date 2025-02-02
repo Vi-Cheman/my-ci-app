@@ -1,1 +1,1 @@
-# my-ci-app
+# Github Action. Continuous Integration
